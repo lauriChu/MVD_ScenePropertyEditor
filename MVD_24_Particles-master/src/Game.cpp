@@ -28,15 +28,54 @@ void Game::init(int w, int h) {
 	gui_system_.init(window_width_, window_height_);
     animation_system_.init();
     
-    graphics_system_.screen_background_color = lm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    createFreeCamera_(13.614, 16, 32, -0.466, -0.67, -0.579);
-    
-    
-    
-    
-    particle_emitter_ = new ParticleEmitter();
-    particle_emitter_->init();
 
+	/***SHADERS*****/
+
+	//Background Color
+	graphics_system_.screen_background_color = lm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	//graphics_system_.screen_background_color = lm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+
+	// BLEND SHAPES
+	Shader* blend_shader = graphics_system_.loadShader("data/shaders/phong_blend.vert", "data/shaders/phong.frag");
+	Parsers::parseMTL("data/assets/toon/", "toon_base.mtl", graphics_system_.getMaterials(), blend_shader->program);
+	int toon_ent = ECS.createEntity("toon");
+	Mesh& toon_mesh = ECS.createComponentForEntity<Mesh>(toon_ent);
+	//create multi-material-set geometry
+	toon_mesh.geometry = Parsers::parseOBJ_multi("data/assets/toon/toon_base.obj",
+		graphics_system_.getGeometries(),
+		graphics_system_.getMaterials());
+	//get reference to geom object
+	Geometry& toon_geom = graphics_system_.getGeometries()[toon_mesh.geometry];
+	//add blend shapes here
+	std::vector<float> vertices, normals, uvs;
+	std:vector<unsigned int> indices;
+
+	Parsers::parseOBJ("data/assets/toon/toon_happy.obj", vertices, normals, uvs, indices);
+	toon_geom.addBlendShape(vertices);
+
+	BlendShapes& blend_comp = ECS.createComponentForEntity<BlendShapes>(toon_ent);
+	blend_comp.addShape("happy");
+	blend_comp.blend_weights[0] = 1.0;
+
+
+	// LIGHT
+	//create default directional light
+	ECS.createComponentForEntity<Light>(ECS.createEntity("Directional Light"));
+
+
+	// PARTICLES
+	particle_emitter_ = new ParticleEmitter();
+	particle_emitter_->init();
+
+	// ANIMATION
+	Shader* animation_shader = graphics_system_.loadShader("data/shaders/phong_anim.vert", "data/shaders/phong.frag");
+	Parsers::parseCollada("data/assets/Punching.dae", animation_shader, graphics_system_);
+
+
+
+	//create camera
+    createFreeCamera_(13.614, 16, 32, -0.466, -0.67, -0.579);
 
 
     //******* LATE INIT AFTER LOADING RESOURCES *******//
