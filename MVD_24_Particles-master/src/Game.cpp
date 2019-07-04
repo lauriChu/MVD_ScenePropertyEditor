@@ -56,8 +56,9 @@ void Game::init(int w, int h) {
 
 	BlendShapes& blend_comp = ECS.createComponentForEntity<BlendShapes>(toon_ent);
 	blend_comp.addShape("happy");
-	blend_comp.blend_weights[0] = 1.0;
-
+	blend_comp.addShape("angry");
+	blend_comp.addShape("base");
+	blend_comp.blend_weights[0] = 0.0;
 
 	// LIGHT
 	//create default directional light
@@ -69,8 +70,8 @@ void Game::init(int w, int h) {
 	particle_emitter_->init();
 
 	// ANIMATION
-	Shader* animation_shader = graphics_system_.loadShader("data/shaders/phong_anim.vert", "data/shaders/phong.frag");
-	Parsers::parseCollada("data/assets/Punching.dae", animation_shader, graphics_system_);
+	//Shader* animation_shader = graphics_system_.loadShader("data/shaders/phong_anim.vert", "data/shaders/phong.frag");
+	//Parsers::parseCollada("data/assets/Punching.dae", animation_shader, graphics_system_);
 
 
 

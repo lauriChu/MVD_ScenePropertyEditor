@@ -452,15 +452,7 @@ void DebugSystem::updateimGUI_(float dt) {
 		ImGui::SetNextWindowBgAlpha(1.0);
 		ImGui::Begin("Scene", &show_imGUI_);
 
-        //sliders for blend shapes
-
-//        auto& test_blendshapes = ECS.getAllComponents<BlendShapes>()[0];
-//        for (size_t i = 0; i < test_blendshapes.blend_weights.size(); i++) {
-//            ImGui::SliderFloat(test_blendshapes.blend_names[i].c_str(),
-//                               &(test_blendshapes.blend_weights[i]),
-//                               0.0f, 1.0f,
-//                               "%.3f");
-//        }
+        
         
 		//Tell imGUI to display variables of the camera
 		//get camera and its transform
@@ -559,6 +551,57 @@ void DebugSystem::updateimGUI_(float dt) {
 
 		ImGui::End();
 
+		// ******** SHAPE EDITOR *********
+		ImGui::Begin("Face Editor", &show_imGUI_, ImGuiWindowFlags_MenuBar);
+		if (ImGui::TreeNode("Expression")) {
+			ImGui::Text("Select your face expression");
+			if (ImGui::Button("Smile")){
+				auto& test_blendshapes = ECS.getAllComponents<BlendShapes>()[0];
+				for (size_t i = 0; i < test_blendshapes.blend_weights.size(); i++) {
+					if (test_blendshapes.blend_names[i] == "happy") {
+						test_blendshapes.blend_weights[i] = 1.0;
+					}
+				}
+			}
+			if (ImGui::Button("Normal")) {
+				auto& test_blendshapes = ECS.getAllComponents<BlendShapes>()[0];
+				for (size_t i = 0; i < test_blendshapes.blend_weights.size(); i++) {
+					if (test_blendshapes.blend_names[i] == "happy") {
+						test_blendshapes.blend_weights[i] = 0.0;
+					}
+				}
+			}
+			if (ImGui::Button("Angry")) {
+				auto& test_blendshapes = ECS.getAllComponents<BlendShapes>()[0];
+				for (size_t i = 0; i < test_blendshapes.blend_weights.size(); i++) {
+					if (test_blendshapes.blend_names[i] == "happy") {
+						test_blendshapes.blend_weights[i] = -1.0;
+					}
+				}
+			}
+			//slider for smile blend shape
+			ImGui::Text("Or use advanced face tunner");
+			if (ImGui::BeginMenu("Advanced")) {
+				auto& test_blendshapes = ECS.getAllComponents<BlendShapes>()[0];
+				ImGui::SliderFloat(test_blendshapes.blend_names[0].c_str(),
+					&(test_blendshapes.blend_weights[0]),
+					-1.0f, 1.0f,
+					"%.3f");
+				ImGui::EndMenu();
+			}
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("Size")) {
+			ImGui::Text("Change face size");
+			auto& test_blendshapes = ECS.getAllComponents<BlendShapes>()[0];
+			ImGui::SliderFloat(test_blendshapes.blend_names[1].c_str(),
+				&(test_blendshapes.blend_weights[1]),
+				-1.0f, 1.0f,
+				"%.3f");
+			ImGui::TreePop();
+		}
+		
+		ImGui::End();
 
 		// Create a window called "My First Tool", with a menu bar.
 		ImGui::Begin("My First Tool", &show_imGUI_, ImGuiWindowFlags_MenuBar);
