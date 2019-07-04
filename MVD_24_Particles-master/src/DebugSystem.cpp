@@ -2,14 +2,16 @@
 #include "extern.h"
 #include "Parsers.h"
 #include "shaders_default.h"
+#include "ParticleEmitter.h"
 
 DebugSystem::~DebugSystem() {
 	delete grid_shader_;
 	delete icon_shader_;
 }
 
-void DebugSystem::init(GraphicsSystem* gs) {
+void DebugSystem::init(GraphicsSystem* gs, ParticleEmitter* pe) {
 	graphics_system_ = gs;
+	particle_emitter_ = pe;
 }
 
 void DebugSystem::lateInit() {
@@ -599,6 +601,15 @@ void DebugSystem::updateimGUI_(float dt) {
 				-1.0f, 1.0f,
 				"%.3f");
 			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Color")) {
+			ImGui::Text("Preferred Color picker");
+			
+			//test_blendshapes.color = {1,0,0};
+			ImGui::ColorEdit4("Color", particle_emitter_->color);
+			//test_blendshapes.setUniform(U_COLOR, lm::vec3(1.0f, 0.0f, 0.0f));
+
 		}
 		
 		ImGui::End();

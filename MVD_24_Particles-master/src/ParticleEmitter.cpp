@@ -40,6 +40,8 @@ void ParticleEmitter::init() {
 									4,
 									feedback_varyings);
 
+	particle_shader_->color = lm::vec3{ 1.0f, 0.0f, 0.0f };
+
 	texture_id_ = Parsers::parseTexture("data/assets/droptexture.tga");
 
 	glEnable(GL_POINT_SPRITE);
@@ -218,12 +220,13 @@ void ParticleEmitter::update() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDepthMask(GL_FALSE);
-
+	
 	Camera& cam = ECS.getComponentInArray<Camera>(ECS.main_camera);
 
 	particle_shader_->setUniform(U_MODEL, lm::mat4());
 	particle_shader_->setUniform(U_VP, cam.view_projection);
 	particle_shader_->setTexture(U_DIFFUSE_MAP, texture_id_, 0);
+	particle_shader_->setUniform(U_COLOR, lm::vec3(color[0], color[1], color[2]));
 	//time in seconds since app starts
 	particle_shader_->setUniform(U_TIME, (float)glfwGetTime());
 

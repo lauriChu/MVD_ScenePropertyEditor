@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include <vector>
 #include "GraphicsSystem.h"
+#include "ParticleEmitter.h"
 
 
 struct TransformNode {
@@ -17,7 +18,7 @@ class DebugSystem {
 public:
 	
 	~DebugSystem();
-	void init(GraphicsSystem* gs);
+	void init(GraphicsSystem* gs, ParticleEmitter* pe);
 	void lateInit();
 	void update(float dt);
 
@@ -33,6 +34,8 @@ public:
 private:
 	//graphics system pointer
 	GraphicsSystem* graphics_system_;
+	//particle emitter pointer
+	ParticleEmitter* particle_emitter_;
 	
 	//bools to draw or not
     bool active_;

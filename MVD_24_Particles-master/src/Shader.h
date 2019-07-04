@@ -145,6 +145,7 @@ public:
     void saveProgramInfoLog(GLuint obj);
     void saveShaderInfoLog(GLuint obj);
     std::string log;
+	lm::vec3 color;
     
 	//
     GLuint getUniformLocation(UniformID name);

@@ -20,10 +20,13 @@ void Game::init(int w, int h) {
 	window_width_ = w; window_height_ = h;
 	//******* INIT SYSTEMS *******
 
+	
+
 	//init systems except debug, which needs info about scene
 	control_system_.init();
 	graphics_system_.init(window_width_, window_height_, "data/assets/");
-	debug_system_.init(&graphics_system_);
+	particle_emitter_ = new ParticleEmitter();
+	debug_system_.init(&graphics_system_, particle_emitter_);
     script_system_.init(&control_system_);
 	gui_system_.init(window_width_, window_height_);
     animation_system_.init();
@@ -32,12 +35,12 @@ void Game::init(int w, int h) {
 	/***SHADERS*****/
 
 	//Background Color
-	graphics_system_.screen_background_color = lm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	//graphics_system_.screen_background_color = lm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	//graphics_system_.screen_background_color = lm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	graphics_system_.screen_background_color = lm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 
 	// BLEND SHAPES
-	Shader* blend_shader = graphics_system_.loadShader("data/shaders/phong_blend.vert", "data/shaders/phong.frag");
+	/*Shader* blend_shader = graphics_system_.loadShader("data/shaders/phong_blend.vert", "data/shaders/phong.frag");
 	Parsers::parseMTL("data/assets/toon/", "toon_base.mtl", graphics_system_.getMaterials(), blend_shader->program);
 	int toon_ent = ECS.createEntity("toon");
 	Mesh& toon_mesh = ECS.createComponentForEntity<Mesh>(toon_ent);
@@ -58,7 +61,7 @@ void Game::init(int w, int h) {
 	blend_comp.addShape("happy");
 	blend_comp.addShape("angry");
 	blend_comp.addShape("base");
-	blend_comp.blend_weights[0] = 0.0;
+	blend_comp.blend_weights[0] = 0.0;*/
 
 	// LIGHT
 	//create default directional light
@@ -66,7 +69,7 @@ void Game::init(int w, int h) {
 
 
 	// PARTICLES
-	particle_emitter_ = new ParticleEmitter();
+	
 	particle_emitter_->init();
 
 	// ANIMATION
