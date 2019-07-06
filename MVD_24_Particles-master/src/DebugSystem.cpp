@@ -453,7 +453,7 @@ void DebugSystem::updateimGUI_(float dt) {
 		ImGui::SetNextWindowSize(ImVec2(400, 200));
 		ImGui::SetNextWindowBgAlpha(1.0);
 		ImGui::Begin("Scene", &show_imGUI_);
-
+		ImGui::Text("Shows all scene entities");
         
         
 		//Tell imGUI to display variables of the camera
@@ -553,8 +553,43 @@ void DebugSystem::updateimGUI_(float dt) {
 
 		ImGui::End();
 
+		// ******** MATERIALS VIEW ********
+		ImGui::Begin("Materials", &show_imGUI_, ImGuiWindowFlags_MenuBar);
+		ImGui::Text("Shows all scene materials");
+
+		std::vector<Material>& materials = graphics_system_->getMaterials();
+		for (size_t i = 0; i < materials.size(); i++) {
+			if (ImGui::TreeNode(materials[i].name.c_str())) {
+				if (materials[i].diffuse_map != -1) {
+					ImGui::Image((ImTextureID)(materials[i].diffuse_map), ImVec2(64, 64));
+					ImGui::SameLine();
+					ImGui::SetCursorPos({ ImGui::GetCursorPos().x, ImGui::GetCursorPos().y + (64 - ImGui::GetFont()->FontSize) / 2 });
+					ImGui::Text("Diffuse");
+				}
+				if (materials[i].normal_map != -1) {
+					ImGui::Image((ImTextureID)(materials[i].normal_map), ImVec2(64, 64));
+					ImGui::SameLine();
+					ImGui::SetCursorPos({ ImGui::GetCursorPos().x, ImGui::GetCursorPos().y + (64 - ImGui::GetFont()->FontSize) / 2 });
+					ImGui::Text("Normal");
+				}
+				if (materials[i].specular_map != -1) {
+					ImGui::Image((ImTextureID)(materials[i].specular_map), ImVec2(64, 64));
+					ImGui::SameLine();
+					ImGui::SetCursorPos({ ImGui::GetCursorPos().x, ImGui::GetCursorPos().y + (64 - ImGui::GetFont()->FontSize) / 2 });
+					ImGui::Text("Specular");
+				}
+
+				if (materials[i].diffuse_map == -1 && materials[i].normal_map == -1 && materials[i].specular_map == -1) {
+					ImGui::Text("No texture");
+				}
+			}
+			
+			ImGui::TreePop();
+		}
+		ImGui::End();
+
 		// ******** SHAPE EDITOR *********
-		ImGui::Begin("Editor Modes", &show_imGUI_, ImGuiWindowFlags_MenuBar);
+		ImGui::Begin("BlendShapes + Particles", &show_imGUI_, ImGuiWindowFlags_MenuBar);
 		ImGui::Begin("Face Editor", &show_imGUI_, ImGuiWindowFlags_MenuBar);
 		if (ImGui::TreeNode("BlendShapes && Particles")) {
 			ImGui::Text("Select your face expression");
@@ -614,6 +649,8 @@ void DebugSystem::updateimGUI_(float dt) {
 		}
 
 		ImGui::End();
+
+		
 
 		// Rendering
 		ImGui::Render();
