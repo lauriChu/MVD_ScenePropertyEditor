@@ -77,6 +77,7 @@ void Game::init(int w, int h) {
 	mat_blue_check.shader_id = phong_shader->program;
 	mat_blue_check.diffuse_map = Parsers::parseTexture("data/assets/block_blue.tga");
 	mat_blue_check.specular = lm::vec3(0, 0, 0);
+	mat_blue_check.name = "Blue";
 
 	//terrain material and noise map
 
@@ -97,6 +98,7 @@ void Game::init(int w, int h) {
 		true);
 	mat_terrain.height = terrain_height;
 	mat_terrain.uv_scale = lm::vec2(100, 100);
+	mat_terrain.name = "Terrain";
 
 
 	/******** GEOMETRIES & ENVIRONMENT **********/
