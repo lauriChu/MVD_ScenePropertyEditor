@@ -29,10 +29,10 @@ This window is inspired by the creation of avatars of games like TheSims. In add
 - Change color of particles in realtime.
 
 ## Screenshots
-![Blend Shapes Scene](https://gyazo.com/b81ef19c0bb480fafd2bf1492d85c20c)
-![Blend Shapes Scene](https://gyazo.com/0ece2aeeadfa875e95c57c418e3325be)
-![Blend Shapes Scene](https://gyazo.com/6c047c24787af1498ef215a83cd581f3)
+![Blend Shapes Scene](https://i.gyazo.com/b81ef19c0bb480fafd2bf1492d85c20c.gif)
+![Blend Shapes Scene](https://i.gyazo.com/0ece2aeeadfa875e95c57c418e3325be.gif)
+![Blend Shapes Scene](https://i.gyazo.com/6c047c24787af1498ef215a83cd581f3.gif)
 
-![Particles Scene](https://gyazo.com/1c068a833a36756cd44d39c5c9b18cd0)
+![Particles Scene](https://i.gyazo.com/1c068a833a36756cd44d39c5c9b18cd0.gif)
 
-![Terrain Scene](https://gyazo.com/7fea2298b87d256fa5e368da17e094de)
+![Terrain Scene](https://i.gyazo.com/7fea2298b87d256fa5e368da17e094de.jpg)
