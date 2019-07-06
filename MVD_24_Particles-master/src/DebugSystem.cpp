@@ -554,10 +554,11 @@ void DebugSystem::updateimGUI_(float dt) {
 		ImGui::End();
 
 		// ******** SHAPE EDITOR *********
+		ImGui::Begin("Editor Modes", &show_imGUI_, ImGuiWindowFlags_MenuBar);
 		ImGui::Begin("Face Editor", &show_imGUI_, ImGuiWindowFlags_MenuBar);
-		if (ImGui::TreeNode("Expression")) {
+		if (ImGui::TreeNode("BlendShapes && Particles")) {
 			ImGui::Text("Select your face expression");
-			if (ImGui::Button("Smile")){
+			if (ImGui::Button("Smile")) {
 				auto& test_blendshapes = ECS.getAllComponents<BlendShapes>()[0];
 				for (size_t i = 0; i < test_blendshapes.blend_weights.size(); i++) {
 					if (test_blendshapes.blend_names[i] == "happy") {
@@ -605,43 +606,13 @@ void DebugSystem::updateimGUI_(float dt) {
 
 		if (ImGui::TreeNode("Color")) {
 			ImGui::Text("Preferred Color picker");
-			
+
 			//test_blendshapes.color = {1,0,0};
 			ImGui::ColorEdit4("Color", particle_emitter_->color);
 			//test_blendshapes.setUniform(U_COLOR, lm::vec3(1.0f, 0.0f, 0.0f));
 
 		}
-		
-		ImGui::End();
 
-		// Create a window called "My First Tool", with a menu bar.
-		ImGui::Begin("My First Tool", &show_imGUI_, ImGuiWindowFlags_MenuBar);
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-				if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-				if (ImGui::MenuItem("Close", "Ctrl+W")) { show_imGUI_ = false; }
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenuBar();
-		}
-
-		// Edit a color (stored as ~4 floats)
-		float my_color[4];
-		ImGui::ColorEdit4("Color", my_color);
-
-		// Plot some values
-		const float my_values[] = { 0.2f, 0.1f, 1.0f, 0.5f, 0.9f, 2.2f };
-		ImGui::PlotLines("Frame Times", my_values, IM_ARRAYSIZE(my_values));
-
-		// Display contents in a scrolling region
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Important Stuff");
-		ImGui::BeginChild("Scrolling");
-		for (int n = 0; n < 50; n++)
-			ImGui::Text("%04d: Some text", n);
-		ImGui::EndChild();
 		ImGui::End();
 
 		// Rendering

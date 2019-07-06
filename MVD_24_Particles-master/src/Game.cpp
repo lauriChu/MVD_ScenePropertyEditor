@@ -20,13 +20,14 @@ void Game::init(int w, int h) {
 	window_width_ = w; window_height_ = h;
 	//******* INIT SYSTEMS *******
 
-	
-
 	//init systems except debug, which needs info about scene
 	control_system_.init();
 	graphics_system_.init(window_width_, window_height_, "data/assets/");
+	
 	particle_emitter_ = new ParticleEmitter();
-	debug_system_.init(&graphics_system_, particle_emitter_);
+	particle_emitter_->init();
+
+	debug_system_.init(&graphics_system_,particle_emitter_);
     script_system_.init(&control_system_);
 	gui_system_.init(window_width_, window_height_);
     animation_system_.init();
@@ -35,9 +36,8 @@ void Game::init(int w, int h) {
 	/***SHADERS*****/
 
 	//Background Color
-	//graphics_system_.screen_background_color = lm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	graphics_system_.screen_background_color = lm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-
+	graphics_system_.screen_background_color = lm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	//graphics_system_.screen_background_color = lm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	// BLEND SHAPES
 	/*Shader* blend_shader = graphics_system_.loadShader("data/shaders/phong_blend.vert", "data/shaders/phong.frag");
@@ -63,14 +63,81 @@ void Game::init(int w, int h) {
 	blend_comp.addShape("base");
 	blend_comp.blend_weights[0] = 0.0;*/
 
+	/******** SHADERS **********/
+
+	Shader* cubemap_shader = graphics_system_.loadShader("data/shaders/cubemap.vert", "data/shaders/cubemap.frag");
+	Shader* phong_shader = graphics_system_.loadShader("data/shaders/phong.vert", "data/shaders/phong.frag");
+	Shader* reflection_shader = graphics_system_.loadShader("data/shaders/reflection.vert", "data/shaders/reflection.frag");
+	Shader* terrain_shader = graphics_system_.loadShader("data/shaders/phong.vert", "data/shaders/terrain.frag");
+
+	/******** MATERIALS **********/
+	//basic blue material
+	int mat_blue_check_index = graphics_system_.createMaterial();
+	Material& mat_blue_check = graphics_system_.getMaterial(mat_blue_check_index);
+	mat_blue_check.shader_id = phong_shader->program;
+	mat_blue_check.diffuse_map = Parsers::parseTexture("data/assets/block_blue.tga");
+	mat_blue_check.specular = lm::vec3(0, 0, 0);
+
+	//terrain material and noise map
+
+	//noise map data - must be cleaned up
+	ImageData noise_image_data;
+	float terrain_height = 20.0f;
+
+	int mat_terrain_index = graphics_system_.createMaterial();
+	Material& mat_terrain = graphics_system_.getMaterial(mat_terrain_index);
+	mat_terrain.shader_id = terrain_shader->program;
+	mat_terrain.specular = lm::vec3(0, 0, 0);
+	mat_terrain.diffuse_map = Parsers::parseTexture("data/assets/terrain/grass01.tga");
+	mat_terrain.diffuse_map_2 = Parsers::parseTexture("data/assets/terrain/cliffs.tga");
+	mat_terrain.normal_map = Parsers::parseTexture("data/assets/terrain/grass01_n.tga");
+	//read texture, pass optional variables to get pointer to pixel data
+	mat_terrain.noise_map = Parsers::parseTexture("data/assets/terrain/heightmap1.tga",
+		&noise_image_data,
+		true);
+	mat_terrain.height = terrain_height;
+	mat_terrain.uv_scale = lm::vec2(100, 100);
+
+
+	/******** GEOMETRIES & ENVIRONMENT **********/
+
+	//environment
+	int cubemap_geom = graphics_system_.createGeometryFromFile("data/assets/cubemap.obj");
+	std::vector<std::string> cube_faces{
+		"data/assets/skybox/right.tga","data/assets/skybox/left.tga",
+		"data/assets/skybox/top.tga","data/assets/skybox/bottom.tga",
+		"data/assets/skybox/front.tga", "data/assets/skybox/back.tga" };
+	graphics_system_.setEnvironment(Parsers::parseCubemap(cube_faces),
+		cubemap_geom, cubemap_shader->program);
+
+	//terrain
+	//create terrain geometry - this function is a wrapper for Geometry::createTerrain
+	int terrain_geometry = graphics_system_.createTerrainGeometry(500,
+		0.4f,
+		terrain_height,
+		noise_image_data);
+
+	//delete noise_image data other we have a memory leak
+	delete noise_image_data.data;
+
+
+	//******** ENTITIES  **********/
+
+	//terrain
+	int terrain_entity = ECS.createEntity("Terrain");
+	Mesh& terrain_mesh = ECS.createComponentForEntity<Mesh>(terrain_entity);
+	terrain_mesh.geometry = terrain_geometry;
+	terrain_mesh.material = mat_terrain_index;
+	terrain_mesh.render_mode = RenderModeForward;
+
 	// LIGHT
 	//create default directional light
 	ECS.createComponentForEntity<Light>(ECS.createEntity("Directional Light"));
 
 
 	// PARTICLES
-	
-	particle_emitter_->init();
+	//particle_emitter_ = new ParticleEmitter();
+	//particle_emitter_->init();
 
 	// ANIMATION
 	//Shader* animation_shader = graphics_system_.loadShader("data/shaders/phong_anim.vert", "data/shaders/phong.frag");
