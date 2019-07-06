@@ -40,7 +40,7 @@ void Game::init(int w, int h) {
 	//graphics_system_.screen_background_color = lm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	// BLEND SHAPES
-	/*Shader* blend_shader = graphics_system_.loadShader("data/shaders/phong_blend.vert", "data/shaders/phong.frag");
+	Shader* blend_shader = graphics_system_.loadShader("data/shaders/phong_blend.vert", "data/shaders/phong.frag");
 	Parsers::parseMTL("data/assets/toon/", "toon_base.mtl", graphics_system_.getMaterials(), blend_shader->program);
 	int toon_ent = ECS.createEntity("toon");
 	Mesh& toon_mesh = ECS.createComponentForEntity<Mesh>(toon_ent);
@@ -61,18 +61,18 @@ void Game::init(int w, int h) {
 	blend_comp.addShape("happy");
 	blend_comp.addShape("angry");
 	blend_comp.addShape("base");
-	blend_comp.blend_weights[0] = 0.0;*/
+	blend_comp.blend_weights[0] = 0.0;
 
 	/******** SHADERS **********/
 
-	Shader* cubemap_shader = graphics_system_.loadShader("data/shaders/cubemap.vert", "data/shaders/cubemap.frag");
+	/*Shader* cubemap_shader = graphics_system_.loadShader("data/shaders/cubemap.vert", "data/shaders/cubemap.frag");
 	Shader* phong_shader = graphics_system_.loadShader("data/shaders/phong.vert", "data/shaders/phong.frag");
 	Shader* reflection_shader = graphics_system_.loadShader("data/shaders/reflection.vert", "data/shaders/reflection.frag");
 	Shader* terrain_shader = graphics_system_.loadShader("data/shaders/phong.vert", "data/shaders/terrain.frag");
 
 	/******** MATERIALS **********/
 	//basic blue material
-	int mat_blue_check_index = graphics_system_.createMaterial();
+	/*int mat_blue_check_index = graphics_system_.createMaterial();
 	Material& mat_blue_check = graphics_system_.getMaterial(mat_blue_check_index);
 	mat_blue_check.shader_id = phong_shader->program;
 	mat_blue_check.diffuse_map = Parsers::parseTexture("data/assets/block_blue.tga");
@@ -104,7 +104,7 @@ void Game::init(int w, int h) {
 	/******** GEOMETRIES & ENVIRONMENT **********/
 
 	//environment
-	int cubemap_geom = graphics_system_.createGeometryFromFile("data/assets/cubemap.obj");
+	/*int cubemap_geom = graphics_system_.createGeometryFromFile("data/assets/cubemap.obj");
 	std::vector<std::string> cube_faces{
 		"data/assets/skybox/right.tga","data/assets/skybox/left.tga",
 		"data/assets/skybox/top.tga","data/assets/skybox/bottom.tga",
@@ -126,11 +126,11 @@ void Game::init(int w, int h) {
 	//******** ENTITIES  **********/
 
 	//terrain
-	int terrain_entity = ECS.createEntity("Terrain");
+	/*int terrain_entity = ECS.createEntity("Terrain");
 	Mesh& terrain_mesh = ECS.createComponentForEntity<Mesh>(terrain_entity);
 	terrain_mesh.geometry = terrain_geometry;
 	terrain_mesh.material = mat_terrain_index;
-	terrain_mesh.render_mode = RenderModeForward;
+	terrain_mesh.render_mode = RenderModeForward;*/
 
 	// LIGHT
 	//create default directional light
